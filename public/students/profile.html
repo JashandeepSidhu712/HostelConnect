@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STUDENT PROFLE</title>
+
+    <!-- INDEX.CSS SHEET -->
+
+    <link rel="stylesheet" href="../css/index.css">
+
+    <!-- Bootstrap links 2 -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"> 
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+    <!-- JQUERY LINK -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- JAVASCRIPT -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <!-- ANGULAR JS -->
+
+    <script src="../angular/angular.min.js"></script>
+
+    <!-- WAYPOINT -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js" integrity="sha512-CEiA+78TpP9KAIPzqBvxUv8hy41jyI3f2uHi7DGp/Y/Ka973qgSdybNegWFciqh6GrN2UePx2KkflnQUbUhNIA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- ANIMATE.CSS -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"/>
+
+    <!-- FONT AWESOME -->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script>
+
+        $(document).ready(function(){
+
+            // /////////////////////////////////////////////////////////////////    GET ACTIVE USER
+            var activeUser = localStorage.getItem("activeUser");
+
+            // /////////////////////////////////////////////////////////////////    USE ACTIVE USER IN HEADING
+            $("#welcomeuser").html(activeUser);
+            $("#email").val(activeUser).prop("readonly","true");
+
+            // /////////////////////////////////////////////////////////////////    ACCESS EMAIL IN INPUT BOX
+            var email = $("#email").val();
+
+            // /////////////////////////////////////////////////////////////////    FETCH FULL DETAILS OF STUDENTS USIG EMAIL
+            $.getJSON("/fetchStudentDetails?email="+email, function(JSONdata){
+                // /////////////////////////////////////////////////////////////////    IF DATA IS NOT AVAILABLE
+                if(JSONdata.length==0)
+                {
+                    alert(" Details not available!");
+                }
+                // /////////////////////////////////////////////////////////////////    AUTO-FILL THE DETAILS WHICH ARE AVAILABLE
+                else
+                {
+                    $("#contact").val(JSONdata[0].contact).prop("readonly","true");
+                    $("#hostel").val(JSONdata[0].hostel).prop("readonly","true");
+                    $("#gender").val(JSONdata[0].gender).prop("readonly","true");
+                    $("#branch").val(JSONdata[0].branch).prop("readonly","true");
+                    $("#year").val(JSONdata[0].year).prop("readonly","true");
+
+                    // /////////////////////////////////////////////////////////////////    IF FORM WAS NOT COMPLETE USE NAME, ASK USER TO SAVE THE FORM
+                    if(JSONdata[0].name.length==0)
+                    {
+                        alert("Please fill your pending details, SAVE the form and LOCK your profile. Please fill correct details as these are essebtial, if found out to be wrong, required action will be taken.");
+                    }
+                    // /////////////////////////////////////////////////////////////////    IF FORM WAS SAVED AND ALL DETAILS WERE PRESENT
+                    else
+                    {
+                        $("#rollno").val(JSONdata[0].rollNo).prop("readonly","true");
+                        $("#name").val(JSONdata[0].name).prop("readonly","true");
+                        $("#father").val(JSONdata[0].father).prop("readonly","true");
+                        $("#parentContact").val(JSONdata[0].parentContact).prop("readonly","true");
+                        $("#preview").prop("src","../uploads/"+JSONdata[0].picture);
+                        $("#address").val(JSONdata[0].address).prop("readonly","true");
+                        $("#pin").val(JSONdata[0].pin).prop("readonly","true"); 
+                        $("#category").val(JSONdata[0].category).prop("readonly","true");   
+                        $("#btnSave").prop("disabled","true");  
+                        
+                        $("#btnLock").click(function()
+                        {
+                            $("#btnLock").prop("disabled","true"); 
+                            var email= $("#email").val();
+
+                            var url = "/lockProfile?email="+email;
+
+                            $.get(url,function(resp){
+                                alert(resp); 
+                                $("#contact").prop("readonly","true");
+                                $("#hostel").prop("readonly","true");
+                                $("#gender").prop("readonly","true");
+                                $("#branch").prop("readonly","true");
+                                $("#name").prop("readonly","true");
+                                $("#father").prop("readonly","true");
+                                $("#address").prop("readonly","true");
+                                $("#pin").prop("readonly","true");              
+                            })
+                        })
+                    }
+
+                    // /////////////////////////////////////////////////////////////////    IF FORM IS LOCKED ALREADY
+                    if(JSONdata[0].profileStatus=="Lock")
+                    {
+                        $("#btnSave").prop("readonly","true");
+                        $("#contact").prop("readonly","true");
+                        $("#rollno").prop("readonly","true");
+                        $("#hostel").prop("readonly","true");
+                        $("#gender").prop("readonly","true");
+                        $("#branch").prop("readonly","true");
+                        $("#year").prop("readonly","true");
+                        $("#name").prop("readonly","true");
+                        $("#father").prop("readonly","true");
+                        $("#parentContact").prop("readonly","true");
+                        $("#preview").prop("readonly","true");
+                        $("#address").prop("readonly","true");
+                        $("#pin").prop("readonly","true");
+                        $("#category").prop("readonly","true");
+                        $("#btnLock").prop("disabled","true");
+                    }    
+                }
+                
+            })
+
+            /////////////////got them out
+
+                // /////////////////////////////////////////////////////////////////    LOAD FOOTER
+                $(".footer").load("../common/footer.html");
+
+                // /////////////////////////////////////////////////////////////////    LOG OUT BUTTON
+                $("#btnLogout").click(function(){
+                    localStorage.removeItem("activeUser");
+                    window.location.replace("../index.html");
+                });
+
+        });
+
+    </script>
+
+    <script>
+
+        function getImagePreview(ref)
+        {
+        var image = document.getElementById('preview');
+        image.src = URL.createObjectURL(ref.files[0]);
+        }
+
+        function getProofPreview(ref)
+        {
+            var proofdiv = document.getElementById('previewproof');
+            proofdiv.src =  URL.createObjectURL(ref.files[0]);
+        }
+
+        function doDisplay()
+        {
+        var show = document.querySelector("#uploadBtn");
+        show.style.display = "block";
+        }
+
+        function doHide()
+        {
+        var show = document.querySelector("#uploadBtn");
+        show.style.display = "none";
+        }
+
+    </script>
+
+    <style>
+
+        #preview
+        {
+            display: flex;
+            margin: auto;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .profile-pic-div
+        {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: auto;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        #upload
+        {
+            display: none;  
+        }
+        #uploadBtn
+        {
+            height: 60px;
+            width: 170px;
+            position: relative;
+            bottom: 60px;
+            text-align: center;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            text-align: center;
+            font-size: large;
+            font-weight: bold;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+    </style>
+
+</head>
+<body>
+    
+    <!-- ///////////////////////////                NAVBAR -->
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+    
+            <!-- LOGO -->
+            <a class="navbar-brand row">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <span>
+                        <img src="../pics/mrsptulogo.png" alt="Bootstrap" class="uniimg" width="50" height="50" style="margin-left: 1vw;">
+                    </span>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan1">
+                                MAHARAJA RANJIT SINGH PUNJAB TECHNICAL UNIVERSITY, BATHINDA 
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan">
+                                STUDENT PROFILE
+                            </span>
+                        </div>
+                    </div>
+                </div> 
+            </a>
+
+            <!-- BUTTONS IN NVABR -->
+            <form class="d-flex"> 
+                <a href="#" id="btnLogout" class="btn btn-outline-success" style="margin: 1vw;">
+                    LOGOUT
+                </a>
+            </form>
+            
+        </div>
+    </nav>
+
+    <!-- ///////////////////////////                MAIN SECTION -->
+    <div class="sectionBackground">
+
+        <!-- ///////////////////////////                HEADING -->
+        <div class="container-fluid bg-body-tertiary rounded shadow heading">
+            <span class="headingSpan">
+                WELCOME: <span class="headingSpan" id="welcomeuser"></span>
+            </span>
+        </div>
+
+        <!-- ///////////////////////////                PROFILE SECTION -->
+        <div class="container-fluid bg-body-tertiary rounded" style="padding: 2vw; margin-top: 2vw;">
+
+            <div class="row">
+                <div class="col">
+
+                    <!-- ///////////////////////////                FORM METHOD POST-->
+                    <form method="post" enctype="multipart/form-data">
+
+                        <!-- ///////////////////////////                EMAIL + CONTACT + NAME + PROFILE IMG-->
+                        <div class="row">
+                            <div class="col">
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-floating mb-3">
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                                            <label for="email">Email address *</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="contact" name="contact" placeholder="name@example.com" required>
+                                            <label for="contact">Contact Number *</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="name@example.com" required>
+                                            <label for="name">Name *</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col">
+                                <div class="profile-pic-div" onmouseenter="doDisplay();" onmouseleave="doHide();">
+                                    <center>
+                                    <img src="../pics/usericon.png" id="preview" style="width: 200px; height: 200px;">
+                                    <label for="upload" class="form-label" id="uploadBtn" aria-hidden="false"> <i class="fa-solid fa-folder-image">Choose</i> </label>
+                                    <input type="file" class="form-control" id="upload" name="upload" required onchange="getImagePreview(this)" aria-required="true">
+                                    <span id="profilemsj"></span>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ///////////////////////////                GENDER + HOSTEL NO -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="gender" name="gender" placeholder="name@example.com">
+                                    <label for="gender">Gender *</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="hostel" name="hostel" placeholder="name@example.com">
+                                    <label for="hostel">Hostel Number *</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ///////////////////////////                BRANCH + ROLL NO -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="branch" name="branch" placeholder="name@example.com" required>
+                                    <label for="branch">Branch *</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="rollno" name="rollno" placeholder="name@example.com" required>
+                                    <label for="rollno">Roll No. *</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ///////////////////////////                FATHER + PARENT CONTACT -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="father" name="father" placeholder="name@example.com" required>
+                                    <label for="father">Father Name *</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="parentContact" name="parentContact" placeholder="name@example.com" required>
+                                    <label for="parentContact">Parents Contact Number *</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ///////////////////////////                ADDRESS + PIN CODE -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="address" name="address" placeholder="name@example.com" required>
+                                    <label for="address">Address *</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="number" class="form-control" id="pin" name="pin" placeholder="name@example.com" required>
+                                    <label for="pin">Pin Code *</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ///////////////////////////                CATEGORY + ACADEMIC YEAR -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="category" name="category" aria-label="Default select example" aria-placeholder="type" required>
+                                        <option selected>Open this select menu</option>
+                                        <option value="OBC">OBC</option>
+                                        <option value="General">General</option>
+                                        <option value="SC/ST">SC/ST</option>
+                                        <option value="BC">BC</option>
+                                        <option value="other">other</option>
+                                    </select>
+                                    <label for="category">Category *</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating mb-3">
+                                    <input type="number" class="form-control" id="year" name="year" placeholder="name@example.com" required>
+                                    <label for="year">Hostel for Academic Year *</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ///////////////////////////                BUTTON -->
+                        <div class="row">
+                            <div class="col" style="display: flex; align-items: center; justify-content: center; ">
+                                
+                                <!-- ///////////////////////////                SAVE -->
+                                <input type="submit" formaction="/saveStuProfile" value="SAVE" id="btnSave" class="btn btn-success" name="save">
+
+                                <!-- ///////////////////////////                LOCK-->
+                                <input type="button" value="LOCK" name="save" id="btnLock" class="btn btn btn-success" style="margin: 1vw;">
+
+                                <!-- ///////////////////////////                BACK TO DASHBOARD -->
+                                <a href="../students/dashboardStudents.html"><input type="button" value="BACK TO DASHBOARD" name="back" id="btnBack" class="btn btn btn-success" style="margin: 1vw;"></a>
+
+                            </div>
+                        </div>
+
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ///////////////////////////                FOOTER SECTION -->
+    <div class="footer">
+
+    </div>
+
+</body>
+</html>

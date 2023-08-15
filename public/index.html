@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOSTEL MRSPTU-GZSCCET</title>
+
+    <!-- INDEX.CSS SHEET -->
+
+    <link rel="stylesheet" href="css/index.css">
+
+    <!-- Bootstrap links 2 -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"> 
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+    <!-- JQUERY LINK -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- JAVASCRIPT -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <!-- WAYPOINT -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js" integrity="sha512-CEiA+78TpP9KAIPzqBvxUv8hy41jyI3f2uHi7DGp/Y/Ka973qgSdybNegWFciqh6GrN2UePx2KkflnQUbUhNIA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- ANIMATE.CSS -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"/>
+
+    <!-- FONT AWESOME -->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- SCRIPT FOR REQUEST BUTTON -->
+
+    <script>
+
+        var i, j;
+
+        function doUpdateHostelList1(){
+
+            var refGender = document.getElementById("usertype");
+            var gender = refGender.value;
+            var indexGender = refGender.selectedIndex;
+            // alert(gender);
+
+            var aryBoys = [" ","1","2","3","4","5"];
+            var aryGirls = [" ","1","2","3","4","5"];
+
+            var refYear = document.querySelector("#year");
+
+            if(indexGender == 0)
+            {
+                refYear.length = 0;
+                return;
+            }
+            
+            if(indexGender == 1)
+            {
+                refYear.length = 0;
+
+                for(i=0; i < aryBoys.length; i++)
+                {
+                    var opt = document.createElement("option");
+                    opt.value = aryBoys[i];
+                    opt.text = aryBoys[i];
+                    refYear.append(opt);
+                }
+            }
+
+            if(indexGender == 2)
+            {
+                refYear.length = 0;
+
+                for(i=0; i < aryGirls.length; i++)
+                {
+                    var opt = document.createElement("option");
+                    opt.value = aryGirls[i];
+                    opt.text = aryGirls[i];
+                    refYear.append(opt);
+                }
+            }
+        }
+        
+    </script>
+
+    <!-- JQUERY SCRIPT -->
+    <script>
+
+        $(document).ready(function(){
+
+            // /////////////////////////////////////////////////////////////////    REQUEST BUTTON
+            $("#btnRequest").click(function(){
+
+                var email = $("#email").val();
+                var tel = $("#tel").val();
+                var gender = $("#usertype").val();
+                var branch = $("#branch").val();
+                var year = $("#year").val();
+
+                $("#email").css("border","green 1px solid");
+                $("#emailmsj").html("<p class='text-success'></p> ");
+
+                var url = "/request?email="+email+"&tel="+tel+"&gender="+gender+"&branch="+branch+"&year="+year;
+
+                if( email.length==0 || tel.length==0 || gender.length==23 || $("#branch").val()=="Open this select menu" || $("#year").val()=="Open this select menu")
+                {
+                    $("#btnRequest").css("background-color","red");
+                    $("#result").html("Fill the complete form").css("color","red");
+                    // alert("Fill the complete form");
+                }
+                else
+                {  
+                    $("#email").css("border","green 1px solid");
+                    $("#tel").css("border","green 1px solid");
+                    $("#usertype").css("border","green 1px solid");
+                    $("#branch").css("border","green 1px solid");
+                    $("#year").css("border","green 1px solid");
+
+                    $.get(url, function(resp){ //fire AJAX request
+                        $("#result").html(resp).css("color","green");
+                    })
+                }
+ 
+            })
+
+            // /////////////////////////////////////////////////////////////////    MANAGER BUTTON
+            $("#btnManager").click(function(){
+                var emailManager = $("#manageremail").val();
+                var passwordManager = $("#managerpassword").val();
+
+                var url = "/managerLogin?emailManager="+emailManager+"&passwordManager="+passwordManager;
+
+                $.getJSON(url, function(JSONresp){
+
+                    if( JSONresp.length==0 )
+                    {
+                        $("#manageremail").css("border","red 1px solid");
+                        $("#managerpassword").css("border","red 1px solid");
+                        $("#btnManager").css("background-color","red");
+                        $("#managerresult").html("Invalid Manager Login").css("color","red");
+                    }
+                    else
+                    {
+                        $("#manageremail").css("border","green 1px solid");
+                        $("#managerpassword").css("border","green 1px solid");
+                        $("#btnManager").css("background-color","green");
+                        $("#managerresult").html("Welcome").css("color","green");
+
+                        localStorage.setItem("activeUser",emailManager);
+                        window.location.href="managers/dashboard.html";
+                    }
+                })
+                
+            })
+
+            // /////////////////////////////////////////////////////////////////    STUDENT LOGIN BUTTON
+            $("#btnStuLogin").click(function(){
+                var studentemail = $("#studentemail").val();
+                var studentpassword = $("#studentpassword").val();
+
+                var url = "/studentLogin?studentemail="+studentemail+"&studentpassword="+studentpassword;
+
+                $.getJSON(url, function(JSONresp){
+
+                    if( JSONresp.length==0 )
+                    {
+                        $("#studentemail").css("border","red 1px solid");
+                        $("#studentpassword").css("border","red 1px solid");
+                        $("#btnStuLogin").css("background-color","red");
+                        $("#studentresult").html("Invalid Student Login").css("color","red");
+                    }
+                    else
+                    {
+                        $("#studentemail").css("border","green 1px solid");
+                        $("#studentpassword").css("border","green 1px solid");
+                        $("#btnStuLogin").css("background-color","green");
+                        $("#studentresult").html("Welcome").css("color","green");
+
+                        localStorage.setItem("activeUser",studentemail);
+                        window.location.href="students/dashboardStudents.html";
+                    }
+                })
+                
+            })
+
+            // /////////////////////////////////////////////////////////////////    EMAIL VALIDATIONS for REQUEST BUTTON
+            $("#email").blur(function(){
+
+                var email = $("#email").val();
+                var r=/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/   ;
+
+                if( r.test(email) == true ){        
+                    $("#email").css("border","green 1px solid");
+                    $("#emailmsj").html("<p class='text-success'></p> ");
+                }
+                else{
+                    $("#email").css("border","red 1px solid");
+                    $("#emailmsj").html("<p class='text-danger'>Enter Email Address in valid format xyz@gmail.com </p> ");
+                }
+            });
+
+            // /////////////////////////////////////////////////////////////////    EMAIL VALIDATIONS for STUDENT LOGIN
+            $("#studentemail").blur(function(){
+
+                var email = $("#studentemail").val();
+                var r=/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+
+                if( r.test(email) == true ){        
+                    $("#studentemail").css("border","green 1px solid");
+                    $("#studentemailmsj").html("<p class='text-success'></p> ");
+                }
+                else{
+                    $("#studentemail").css("border","red 1px solid");
+                    $("#studentemailmsj").html("<p class='text-danger'>Enter Email Address in valid format xyz@gmail.com </p> ");
+                }
+            });
+
+            // /////////////////////////////////////////////////////////////////    EMAIL VALIDATIONS for MANAGER LOGIN
+            $("#manageremail").blur(function(){
+
+                var email = $("#manageremail").val();
+                var r=/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/   ;
+
+                if( r.test(email) == true ){        
+                    $("#manageremail").css("border","green 1px solid");
+                    $("#manageremailmsj").html("<p class='text-success'></p> ");
+                }
+                else{
+                    $("#manageremail").css("border","red 1px solid");
+                    $("#manageremailmsj").html("<p class='text-danger'>Enter Email Address in valid format xyz@gmail.com </p> ");
+                }
+            });
+
+            // /////////////////////////////////////////////////////////////////    VIEW PASSWORD FOR MANAGER LOGIN BUTTON
+            $(".fa1").mousedown(function(){
+                $("#managerpassword").prop("type", "text");
+                $(".fa1").removeClass("fa-eye-slash").addClass("fa-eye");
+            });
+
+            $(".fa1").mouseup(function(){
+                $("#managerpassword").prop("type", "password");
+                $(".fa1").removeClass("fa-eye").addClass("fa-eye-slash");
+            });
+
+            // /////////////////////////////////////////////////////////////////    VIEW PASSWORD FOR STUDENT LOGIN BUTTON
+            $(".fa2").mousedown(function(){
+                $("#studentpassword").prop("type", "text");
+                $(".fa2").removeClass("fa-eye-slash").addClass("fa-eye");
+            });
+
+            $(".fa2").mouseup(function(){
+                $("#studentpassword").prop("type", "password");
+                $(".fa2").removeClass("fa-eye").addClass("fa-eye-slash");
+            });
+
+            $(".footer").load("common/footer.html");
+
+            // /////////////////////////////////////////////////////////////////    ANIMATE DESIGNS + WAYPOINT + ANIMATE.CSS
+
+            // $(".AboutUsRow").waypoint(function(direction){
+            //     $(".AboutUsRow").addClass("animated fadeInUp");
+            // },{
+            //     offset: 'bottom-in-view'
+            // });
+
+        })
+    </script>
+
+</head>
+<body>
+
+    <!-- ///////////////////////////                NAVBAR SECTION style="background-color: #992B00;"-->
+    <nav class="navbar bg-body-tertiary" >
+        <div class="container-fluid">
+    
+            <!-- LOGO -->
+            <a class="navbar-brand row">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <span>
+                        <img src="pics/mrsptulogo.png" alt="Bootstrap" class="uniimg" width="50" height="50" style="margin-left: 1vw;">
+                    </span>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan1">
+                                MAHARAJA RANJIT SINGH PUNJAB TECHNICAL UNIVERSITY, BATHINDA 
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan">
+                                HOSTEL MANAGEMENT SYSTEM
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- BUTTONS IN NVABR -->
+            <form class="d-flex">
+                <!-- SIGN UP ---- LOGIN  MODAL BUTTONS -->
+                <div class="SignupLogin">
+                    <button type="button" class="btn btn-outline-success" style="margin: 1vw;" data-bs-toggle="modal" data-bs-target="#signupModal">
+                        REQUEST FOR HOSTEL
+                    </button>
+                    <button type="button" class="btn btn-outline-success" style="margin: 1vw;" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        STUDENT LOGIN
+                    </button>
+                </div>
+
+            <!-- TOGGLER BUTTON -->
+                <button class="navbar-toggler toggleButton" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </form>
+    
+                <!-- OFFCANVAS CONTENT -->
+            <div class="offcanvas offcanvas-end bg-body-tertiary" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Hostel Management</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="list-group list-group-flush">
+
+                        <form class="d-flex justify-content-evenly">
+                            <button type="button" class="btn btn-outline-success" style="margin: 1vw;" data-bs-toggle="modal" data-bs-target="#signupModal">
+                                REQUEST FOR HOSTEL
+                            </button>
+                            <button type="button" class="btn btn-outline-success" style="margin: 1vw;" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                STUDENT LOGIN
+                            </button>
+                        </form>
+
+                        <a href="" class="list-group-item list-group-item-action">Home         </a>
+                        <a href="frontendPages/About.html" class="list-group-item list-group-item-action">About Us         </a>
+                        <a href="frontendPages/administration.html" class="list-group-item list-group-item-action">Administration         </a>
+                        <a href="frontendPages/feeDetails.html" class="list-group-item list-group-item-action">Fee Details         </a>
+                        <a href="frontendPages/gallery.html" class="list-group-item list-group-item-action">Gallery       </a>
+                        <!-- <a href="index.html" class="list-group-item list-group-item-action">Facilities         </a> -->
+                        <!-- <a href="index.html" class="list-group-item list-group-item-action">Downloads         </a>                         -->
+                        <a href="frontendPages/antiRagging.html" class="list-group-item list-group-item-action">Anti-Ragging Act        </a>
+                        <a href="index.html" class="list-group-item list-group-item-action">Contact Us        </a>
+
+                        
+                        <form class="d-flex justify-content-evenly">
+                            <!-- <button type="button" class="btn btn-outline-success" style="margin: 1vw;" data-bs-toggle="modal" data-bs-target="#adminModal">
+                                Admin
+                            </button> -->
+                            <button type="button" class="btn btn-outline-success" style="margin: 1vw;" data-bs-toggle="modal" data-bs-target="#managerModal">
+                                MANAGER LOGIN
+                            </button>
+                        </form>
+   
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- ///////////////////////////                MAIN SECTION -->
+    <div class="section1 sectionBackgroundExtended" style="height: 87vh;">
+
+        <div class="row">
+            <div class="col bg-body-tertiary rounded shadow heading">
+
+                <span  class="headingSpan">
+                    <img src="pics/mrsptulogo.png" alt="" >
+                    MAHARAJA RANJIT SINGH PUNJAB TECHNICAL UNIVERSITY <br>
+                    ਮਹਾਰਾਜਾ ਰਣਜੀਤ ਸਿੰਘ ਪੰਜਾਬ ਟੈਕਨੀਕਲ ਯੂਨੀਵਰਸਿਟੀ, ਬਠਿੰਡਾ (ਪੰਜਾਬ)
+                </span>
+
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- ///////////////////////////                MAIN SECTION -->
+    <div class="section11" style="height: 85vh;">
+        
+        <div class="row">
+            <div class="col bg-body-tertiary rounded shadow heading">
+
+                <span  class="headingSpan" style="font-size: 2.5vw;">
+                    <img src="pics/mrsptulogo.png" alt="" class="uniimg">
+                    MAHARAJA RANJIT SINGH PUNJAB TECHNICAL UNIVERSITY <br>
+                    ਮਹਾਰਾਜਾ ਰਣਜੀਤ ਸਿੰਘ ਪੰਜਾਬ ਟੈਕਨੀਕਲ ਯੂਨੀਵਰਸਿਟੀ, ਬਠਿੰਡਾ (ਪੰਜਾਬ)
+                </span>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ///////////////////////////                ABOUT US SECTION -->
+    <div class="sectionBackground sectionBackgroundExtended" style="height: 100vh;">
+
+        <div class="row">
+            <div class="col">
+
+                <div class="row AboutUsRow">
+                    <div class="col">
+                        <span class="AboutUsSpan1">A home away from home, the hostels at MRSPTU-GZSCCET are more than four walls and a roof. </span><br>
+                    </div>
+                </div>
+
+                <div class="row AboutUsRow">
+                    <div class="col">
+                        <span class="AboutUsSpan2"> They have been designed to provide a comfortable, safe, inclusive and secure living even as they provide opportunities to form 
+                            lasting friendships and ease the transition from home to college. 
+                            Residential staff is always available to support the students from different backgrounds to promote community.
+                            They have been designed to provide a comfortable, safe, inclusive and secure living even as they provide opportunities to form 
+                            lasting friendships and ease the transition from home to college. 
+                            Residential staff is always available to support the students from different backgrounds to promote community.
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ///////////////////////////                STUDENT REGISTRATION SECTION -->
+    <div class="sectionBackground sectionBackgroundExtended">
+
+        <div class="row">
+            <div class="col">
+
+                <!-- ///////////////////////////                STUDENT REGISTRATION HEADING -->
+                <div class="container-fluid bg-body-tertiary rounded shadow heading">
+                    <span class="headingSpan">
+                        STUDENT REGISTRATION <br>
+                    </span>
+                </div>
+
+                <!-- ///////////////////////////                STUDENT REGISTRATION CONTENT -->
+                <div class="row">
+                    <div class="col stuRegcol">
+                        <div class="stuRegSpan bg-body-tertiary">
+                            <span>SEND REQUEST FOR HOSTEL ALLOTMENT <br><br> SIGNUP WITH YOUR CORRECT DETAILS </span> <br><br>
+                            <button type="button" class="btn btn-success" style="margin: 1vw;" data-bs-toggle="modal" data-bs-target="#signupModal">
+                                REQUEST FOR HOSTEL 
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col stuRegcol">
+                        <div class="stuRegSpan bg-body-tertiary">
+                            <span>HOSTEL ALLOTED ALREADY? <br><br> LOGIN HERE TO COMPLETE YOUR PROFILE</span> <br><br>
+                            <button type="button" class="btn btn-success" style="margin: 1vw;" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                STUDENT LOGIN
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ///////////////////////////                ADMINISTRATION SECTION -->
+    <div class="sectionBackground " style="padding-top: 3vw;">
+
+        <div class="row">
+            <div class="col">
+
+                <!-- ///////////////////////////                ADMINISTRATION HEADING -->
+                <div class="container-fluid bg-body-tertiary rounded shadow heading">
+                    <span class="headingSpan">
+                        HOSTEL ADMINISTRATION 
+                    </span>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+
+                        <div class="d-flex justify-content-evenly">
+                            <img src="pics/bg3L.jpg" alt="" class="administrationImg galleryDesign">
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- <div class="row">
+                    <div class="col">
+
+                        <div class="d-flex justify-content-evenly">
+                            <a href=""><button class="btn btn-success">MORE</button></a>
+                        </div>
+
+                    </div>
+                </div> -->
+
+            </div>
+        </div>
+            
+    </div>
+
+    <!-- ///////////////////////////                GALLERY SECTION -->
+    <div class="sectionBackground" style="height: auto;">
+        <div class="row">
+            <div class="col">
+                
+                <div class="container-fluid bg-body-tertiary rounded shadow heading">
+                    <span class="headingSpan">
+                        HOSTEL GALLERY <br>
+                    </span>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="galleryDesign">
+                            <img src="pics/bg3.jpg" alt="" class="galimg1 galimgs" title=""></a>
+                            <img src="pics/bg3L.jpg" alt="" class="galimg2 galimgs" title="">
+                            <img src="pics/bg4.jpg" alt="" class="galimg3 galimgs" title="">
+                            <img src="pics/bg3.jpg" alt="" class="galimg4 galimgs" title="">
+                            <img src="pics/bg3L.jpg" alt="" class="galimg1 galimgs" title="">
+                            <img src="pics/bgL.jpg" alt="" class="galimg2 galimgs" title="">
+                            <img src="pics/bg4.jpg" alt="" class="galimg3 galimgs" title="">
+                            <img src="pics/bg3.jpg" alt="" class="galimg4 galimgs" title="">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ///////////////////////////                FACILITIES SECTION -->
+    <div class="sectionBackground">
+
+        <div class="row">
+            <div class="col">
+
+                <div class="container-fluid bg-body-tertiary rounded shadow heading">
+                    <span class="headingSpan">
+                        HOSTEL FACILITIES <br>
+                    </span>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+
+                        <div class="galleryDesign">
+
+                            <div class="table-responsive bg-body-tertiary">
+                                <table class="table table-borderless" style="text-align: center;">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Facility facility faciltiy</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Facility facility faciltiy</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Facility facility faciltiy</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Facility facility faciltiy</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Facility facility faciltiy</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Facility facility faciltiy</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        
+
+    </div>    
+
+    <!-- ///////////////////////////                FOOTER SECTION -->
+    <div class="footer">
+
+    </div>
+
+    <!-- ///////////////////////////                  MODALS           ///////////////////// -->
+
+    <!-- ///////// REQUEST MODAL -->
+    <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">REQUEST FOR HOSTEL ALLOTMENT</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form>
+
+                        <div class="mb-3 form-floating">
+                          <input type="email" class="form-control" id="email" placeholder="email">
+                          <label for="email">Email address *</label>
+                            <span id="emailmsj"></span>
+                        </div>
+                            
+                        <div class="mb-3 form-floating">
+                            <input type="tel" class="form-control" id="tel" value="" placeholder="tel number">
+                            <label for="tel">Contact Number *</label>
+                            <span id="contactmsj"></span>
+                        </div>
+
+                        <div class="mb-3 form-floating">
+                            <select class="form-select" id="usertype" aria-label="Default select example" aria-placeholder="type" onchange="doUpdateHostelList();" aria-required="true">
+                                <option selected>Open this select menu *</option>
+                                <option value="Boy">Boys</option>
+                                <option value="Girl">Girls</option>
+                            </select>
+                            <label for="options">Gender Type</label>
+                        </div>
+<!--  onchange="doUpdateHostelList();" -->
+                        <div class="mb-3 form-floating">
+                            <select class="form-select" id="branch" aria-label="Default select example" aria-placeholder="type" aria-required="true">
+                                <option selected>Open this select menu</option>
+                                <option value="B.Tech Computer Science and Engineering">B.Tech Computer Science and Engineering</option>
+                                <option value="B.Tech Civil Engineering">B.Tech Civil Engineering</option>
+                                <option value="B.Tech Electrical Engineering">B.Tech Electrical Engineering</option>
+                                <option value="B.Tech Mechanical Engineering">B.Tech Mechanical Engineering</option>
+                                <option value="B.Tech Electronics and Communication">B.Tech Electronics and Communication</option>
+                                <option value="B.Tech Textile Engineering">B.Tech Textile Engineering</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Computational Science">Computational Sciences </option>
+                                <option value="Food Science and Technology">Food Science and Technology</option>
+                                <option value="Pharmaceutical Sciences and Technology">Pharmaceutical Sciences and Technology</option>
+                                <option value="GZS School of Architecture and Planning">GZS School of Architecture and Planning</option>
+                                <option value="Bachelor of Science">Bachelor of Science</option>
+                                <option value="Bachelor of Business Administration">Bachelor of Business Administration</option>
+                                <option value="Bachelors's in Computer Application">Bachelors's in Computer Application</option>
+                                <option value="Bachelor of Commerce">Bachelor of Commerce</option>
+                                <option value="Master of Technology">Master of Technology</option>
+                            </select>
+                            <label for="options">Branch *</label>
+                        </div>
+
+                        <div class="mb-3 form-floating">
+                            <select class="form-select" id="year" aria-label="Default select example" aria-placeholder="type">
+                                <option selected>Open this select menu</option>
+                                <option value="1">1st year</option>
+                                <option value="2">2nd year</option>
+                                <option value="3">3rd year</option>
+                                <option value="4">4th year</option>
+                                <option value="5">5th year</option>
+                            </select>
+                            <label for="options">Hostel for Academic Year *</label>
+                        </div>
+
+                        <center>
+                            <div class="mb-3" style="margin: 1vw;">
+                                <input type="button" value="REQUEST" class="btn btn-success" id="btnRequest">
+                            </div>
+
+                            <div class="mb-3">
+                                <a href="" id="" data-bs-toggle="modal" data-bs-target="#loginModal" style="text-decoration: none; color: #660000;" >Hostel Alloted already? Login</a>
+                            </div>
+                        </center>
+                    </form>
+
+                </div>
+
+                <div class="modal-footer" style="align-items: center;">
+                    <div id="result"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ///////// LOGIN MODAL -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">STUDENT LOGIN</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form>
+                        <div class="mb-3 form-floating">
+                          <input type="email" class="form-control" id="studentemail" placeholder="email" autocomplete="false"> 
+                          <label for="studentemail">Email address *</label>
+                          <span id="studentemailmsj"></span>
+                        </div> 
+                      
+                        <div class="row">
+                            <div class="mb-3 col-md-11 form-floating">
+                                
+                                
+                                <input type="password" class="form-control" id="studentpassword" value="" placeholder="password"> 
+                                <label for="studentpassword ">&nbsp; Password *</label>
+                            </div>
+                            
+                            <div class="col-md-1" style="margin-top: 3%;">
+                                <i class="fa fa-eye-slash fa2" aria-hidden="true"></i>
+                            </div> 
+                        </div>             
+
+                        <div class="mb-3">
+                           <center><input type="button" value="LOGIN" class="btn btn-success" id="btnStuLogin"></center>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="modal-footer">
+                    <div id="studentresult"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ////////// MANAGER -->
+    <div class="modal fade" id="managerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">MANAGER LOGIN</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form>
+                        <div class="mb-3 form-floating">
+                          <input type="email" class="form-control" id="manageremail" placeholder="email" autocomplete="false"> 
+                          <label for="manageremail">Email address *</label>
+                          <span id="manageremailmsj"></span>
+                        </div> 
+                      
+                        <div class="row">
+                            <div class="mb-3 col-md-11 form-floating">
+                                <input type="password" class="form-control" id="managerpassword" value="" placeholder="password">
+                                <label for="managerpassword">&nbsp; Password *</label>
+                            </div>
+
+                            <div class="col-md-1" style="margin-top: 3%;">
+                                <i class="fa fa-eye-slash fa1" aria-hidden="true"></i> 
+                            </div> 
+                        </div>             
+
+                        <div class="mb-3">
+                           <center><input type="button" value="LOGIN" class="btn btn-success" id="btnManager"></center>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="modal-footer">
+                    <div id="managerresult"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

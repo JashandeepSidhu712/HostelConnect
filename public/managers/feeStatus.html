@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOSTEL ALLOTMENT</title>
+
+    <!-- INDEX.CSS SHEET -->
+
+    <link rel="stylesheet" href="../css/index.css">
+
+    <!-- Bootstrap links 2 -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"> 
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+    <!-- JQUERY LINK -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- JAVASCRIPT -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <!-- ANGULAR JS -->
+
+    <script src="../angular/angular.min.js"></script>
+
+    <!-- WAYPOINT -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js" integrity="sha512-CEiA+78TpP9KAIPzqBvxUv8hy41jyI3f2uHi7DGp/Y/Ka973qgSdybNegWFciqh6GrN2UePx2KkflnQUbUhNIA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- ANIMATE.CSS -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"/>
+
+    <!-- FONT AWESOME -->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script>
+
+        // /////////////////////////////////////////////////////////////////   ANGULAR
+        var pendingModule = angular.module("pendingModule",[]);
+
+        pendingModule.controller("pendingController",function($scope,$http){
+            $scope.x = "working";
+
+            // /////////////////////////////////////////////////////////////////    GET ACTIVEUSER
+            $scope.activeUser = localStorage.getItem("activeUser");
+
+            // /////////////////////////////////////////////////////////////////    HTTP TO SERVER TO GET DATA OF MANAGER WHO IS ACTIVEUSER
+            $http.get("/managerPending?email="+$scope.activeUser).then(success, fail);
+
+            function success(response)
+            {
+                $scope.JSONmanager=response.data;
+                // /////////////////////////////////////////////////////////////////    HEADING REQUIREMENTS - HOSTEL NO
+                $("#hostelNo").html($scope.JSONmanager[0].hostel);
+                
+                // /////////////////////////////////////////////////////////////////    HTTP TO SERVER TO GET DATA OF REQUIRED HOSTEL
+                $http.get("/getPaidStatus?hostel="+$scope.JSONmanager[0].hostel).then(success,fail);
+
+                function success(response)
+                {
+                    $scope.JSONrequests=response.data;
+
+                    // /////////////////////////////////////////////////////////////////    PAID BUTTON
+                    $scope.doPaid=function(email)
+                    {
+                        if(confirm("Sure "+email+" has paid the 1st half semester fee ?")==false)
+                        return;
+
+                        // /////////////////////////////////////////////////////////////////    HTTP TO SERVER FOR ACTION ON PAID CLICK
+                        $http.get("/paidFee?email="+email).then(success1, fail1);
+                        function success1(response)
+                        {
+                            $scope.forPageReload();
+                        }
+                        function fail1(response)
+                        {
+                            alert("error");
+                            alert(response.data);
+                        }   
+                        $scope.forPageReload();
+                    }
+
+                    // /////////////////////////////////////////////////////////////////    HTTP TO SERVER FOR DETAILS WHO PAID FEE IN 2ND TABLE
+                    $http.get("/getPaidStatus2?hostel="+$scope.JSONmanager[0].hostel).then(success, fail);
+                    function success(response)
+                    {
+                        $scope.JSONpaid=response.data;
+                    }
+                    function fail(response)
+                    {
+                        alert(response.data);
+                    } 
+
+                    // /////////////////////////////////////////////////////////////////    PAID BUTTON
+                    $scope.doPaid2nd=function(email)
+                    {
+                        if(confirm("Sure "+email+" has paid the 2nd half semester fee ?")==false)
+                        return;
+
+                        // /////////////////////////////////////////////////////////////////    HTTP TO SERVER FOR ACTION ON PAID CLICK
+                        $http.get("/paidFee2nd?email="+email).then(success1, fail1);
+                        function success1(response)
+                        {
+                            $scope.forPageReload();
+                        }
+                        function fail1(response)
+                        {
+                            alert("error");
+                            alert(response.data);
+                        }   
+                        $scope.forPageReload();
+                    }
+
+                    // /////////////////////////////////////////////////////////////////    HTTP TO SERVER FOR DETAILS WHO PAID FEE IN 2ND TABLE
+                    $http.get("/getPaidStatus3?hostel="+$scope.JSONmanager[0].hostel).then(success2, fail2);
+                    function success2(response)
+                    {
+                        $scope.JSONpaid2nd=response.data;
+                    }
+                    function fail2(response)
+                    {
+                        alert(response.data);
+                    }
+
+                }
+                function fail(response)
+                {
+                    alert(response.data);
+                } 
+
+                
+            }
+            function fail(response)
+            {
+                alert(response.data);
+            } 
+
+            $scope.forPageReload=function()
+            {
+                $http.get("/managerPending?email="+$scope.activeUser).then(success, fail);
+            }
+
+            $scope.doLogOut=function()
+            {
+                localStorage.removeItem("activeUser");
+                window.location.replace("../index.html");
+            }
+
+            if($scope.activeUser == null)
+            window.location.replace("../index.html");
+
+            $(".footer").load("../common/footer.html");
+        })
+
+    </script>
+
+</head>
+<body ng-app="pendingModule" ng-controller="pendingController" ng-init="forPageReload();">
+    
+    <!-- ///////////////////////////                NAVBAR -->
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+    
+            <!-- LOGO -->
+            <a class="navbar-brand row">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <span>
+                        <img src="../pics/mrsptulogo.png" alt="Bootstrap" class="uniimg" width="50" height="50" style="margin-left: 1vw;">
+                    </span>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan1">
+                                MAHARAJA RANJIT SINGH PUNJAB TECHNICAL UNIVERSITY, BATHINDA 
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan">
+                                HOSTLERS FEE STATUS
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- BUTTONS IN NVABR -->
+            <form class="d-flex"> 
+                <a href="#" class="btn btn-outline-success" style="margin: 1vw;" ng-click="doLogOut();">
+                    LOGOUT
+                </a>
+            </form>
+    
+        </div>
+    </nav>
+
+    <!-- ///////////////////////////                MAIN SECTION -->
+    <div class="sectionBackground">
+
+        <!-- ///////////////////////////                HEADING TABLE 1 -->
+        <div class="container-fluid bg-body-tertiary rounded shadow heading">
+            <span class="headingSpan">
+                FEE PAID STATUS FOR <span id="hostelNo"></span> HOSTEL - 1ST HALF
+            </span>
+        </div>
+
+        <!-- ///////////////////////////                TABLE 1 TO MARK 1ST HAFL SEMESTER FEE -->
+        <div class="row" style="padding: 2vw;">
+            <div class="col tab bg-body-tertiary rounded">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered border-dark">
+
+                        <thead>
+                        <tr>
+                                <th>#</th>
+                                <th>Picture</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Contact Number</th>
+                                <th>Roll no</th>
+                                <th>Gender</th>
+                                <th>Batch</th>
+                                <th>Acadamic year</th>
+                                <th>Acton 1</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="obj in JSONrequests">
+                                <td>{{$index+1}}</td>
+                                <td><img src="../uploads/{{obj.picture}}" alt="" width="60px" height="60px"></td>
+                                <td>{{obj.email}}</td>
+                                <td>{{obj.name}}</td>
+                                <td>{{obj.contact}}</td>
+                                <td>{{obj.rollNo}}</td>
+                                <td>{{obj.gender}}</td>
+                                <td>{{obj.branch}}</td>
+                                <td>{{obj.year}}</td>
+                                <td>
+                                    <input type="button" value="PAID" class="btn btn-success" ng-click="doPaid(obj.email);">
+                                </td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+                
+                                    
+                                
+            </div>
+        </div>
+
+        <!-- ///////////////////////////                HEADING TABLE 2 -->
+        <div class="container-fluid tab bg-body-tertiary rounded shadow heading">
+            <span class="headingSpan">
+                FEE PAID STATUS FOR <span id="hostelNo"></span> HOSTEL - 2ND HALF
+            </span>
+        </div>
+
+        <!-- ///////////////////////////                TABLE 2 TO VIEW 1ST HALF DETAIL AND MARK 2ND HALF SEMESTER FEE -->
+        <div class="row" style="padding: 2vw;">
+            <div class="col tab bg-body-tertiary rounded">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered border-dark">
+
+                        <thead>
+                        <tr>
+                                <th>#</th>
+                                <th>Image</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Contact Number</th>
+                                <th>Roll no</th>
+                                <th>Gender</th>
+                                <th>Batch</th>
+                                <th>Acadamic year</th>
+                                <th>Fee Status</th>
+                                <th>Action 1</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="obj in JSONpaid">
+                                <td>{{$index+1}}</td>
+                                <td><img src="../uploads/{{obj.picture}}" alt="" width="60px" height="60px"></td>
+                                <td>{{obj.email}}</td>
+                                <td>{{obj.name}}</td>
+                                <td>{{obj.contact}}</td>
+                                <td>{{obj.rollNo}}</td>
+                                <td>{{obj.gender}}</td>
+                                <td>{{obj.branch}}</td>
+                                <td>{{obj.year}}</td>
+                                <td>{{obj.feeStatus1st}}</td>
+                                <td>
+                                    <input type="button" value="PAID" class="btn btn-success" ng-click="doPaid2nd(obj.email);">
+                                </td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+                
+                                    
+                                
+            </div>
+        </div>
+
+        <!-- ///////////////////////////                HEADING TABLE 3-->
+        <div class="container-fluid tab bg-body-tertiary rounded shadow heading">
+            <span class="headingSpan">
+                FEE PAID STATUS FOR <span id="hostelNo"></span> HOSTEL
+            </span>
+        </div>
+
+        <!-- ///////////////////////////                TABLE 3 TO VIEW BOTH SEMESTER FEE DETAILS -->
+        <div class="row" style="padding: 2vw;">
+            <div class="col tab bg-body-tertiary rounded">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered border-dark">
+
+                        <thead>
+                        <tr>
+                                <th>#</th>
+                                <th>Picture</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Contact Number</th>
+                                <th>Roll no</th>
+                                <th>Gender</th>
+                                <th>Batch</th>
+                                <th>Acadamic year</th>
+                                <th>Fee Status 1st half</th>
+                                <th>Fee Status 2nd half</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="obj in JSONpaid2nd">
+                                <td>{{$index+1}}</td>
+                                <td><img src="../uploads/{{obj.picture}}" alt="" width="60px" height="60px"></td>
+                                <td>{{obj.email}}</td>
+                                <td>{{obj.name}}</td>
+                                <td>{{obj.contact}}</td>
+                                <td>{{obj.rollNo}}</td>
+                                <td>{{obj.gender}}</td>
+                                <td>{{obj.branch}}</td>
+                                <td>{{obj.year}}</td>
+                                <td>{{obj.feeStatus1st}}</td>
+                                <td>{{obj.feeStatus2nd}}</td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+                
+                                    
+                                
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ///////////////////////////                FOOTER SECTION -->
+    <div class="footer">
+
+    </div>
+
+</body>
+</html>

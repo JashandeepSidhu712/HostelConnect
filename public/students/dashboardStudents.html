@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOSTEL STUDENT DASHBOARD</title>
+
+    <!-- INDEX.CSS SHEET -->
+
+    <link rel="stylesheet" href="../css/index.css">
+
+    <!-- Bootstrap links 2 -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"> 
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+    <!-- JQUERY LINK -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- JAVASCRIPT -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <!-- ANGULAR JS -->
+
+    <script src="../angular/angular.min.js"></script>
+
+    <!-- WAYPOINT -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js" integrity="sha512-CEiA+78TpP9KAIPzqBvxUv8hy41jyI3f2uHi7DGp/Y/Ka973qgSdybNegWFciqh6GrN2UePx2KkflnQUbUhNIA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- ANIMATE.CSS -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"/>
+
+    <!-- FONT AWESOME -->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/67872061f1.js" crossorigin="anonymous"></script>
+
+    <script>
+
+        $(document).ready(function(){
+
+            // /////////////////////////////////////////////////////////////////    GET ACIVEUSER
+            var activeUser = localStorage.getItem("activeUser");
+
+            // /////////////////////////////////////////////////////////////////    EMAIL FOR HEADING
+            $("#welcomeuser").html(activeUser);
+
+            // /////////////////////////////////////////////////////////////////    ALLOWANCE REQUIREMENTS FOR ROOM REQUEST + LOCK PROFILE
+            $.getJSON("/fetchStudentDetails?email="+activeUser, function(JSONdata){
+
+                if(JSONdata[0].profileStatus=="Lock")
+                {
+                    $("#requestRoomYear").val(JSONdata[0].year).prop("readonly","true");
+                    $("#hostel").html(JSONdata[0].hostel);
+                    $("#room").val(JSONdata[0].room).prop("readonly","true");
+                    $("#hostelInput").val(JSONdata[0].hostel).prop("readonly","true");
+                    $("#fee").val(JSONdata[0].feeStatus1st).prop("readonly","true");
+                    $("#fee2").val(JSONdata[0].feeStatus2nd).prop("readonly","true");
+                }
+                else
+                {
+                    alert("Please make sure your profile is locked to avail other services.");
+                    $("#roomRequest").prop("disabled","true");
+                    $("#roomNo").prop("disabled","true");
+                    $("#feeStatus").prop("disabled","true");
+                }
+                
+                if(JSONdata[0].year == 1 || JSONdata[0].year == 2)
+                {
+                    $("#requestRoomCGPA").prop("disabled","true");
+                }
+
+                if(JSONdata[0].room!=0)
+                {
+                    $("#btnRoomRequest").prop("disabled","true");
+                }
+
+            })
+
+            // /////////////////////////////////////////////////////////////////    REPLACE BACK TO INDEX.HTML PAGE
+            if(activeUser == null)
+            window.location.replace("../index.html");
+
+            // /////////////////////////////////////////////////////////////////    ROOM REQUEST REQUIREMENTS
+            $("#requestRoomEmail").val(activeUser).prop("readonly","true");
+
+            // /////////////////////////////////////////////////////////////////    ROOM REQUEST BUTTON
+            $("#btnRoomRequest").click(function(){
+
+                var email = $("#requestRoomEmail").val();
+                var cgpa = $("#requestRoomCGPA").val();
+
+                var url = "/requestRoom?email="+email+"&cgpa="+cgpa;
+
+                if( email.length == 0 && cgpa.length == 0)
+                {
+                    alert("Fill the form");
+                }
+                else
+                {  
+                    $.get(url, function(resp){ //fire AJAX request
+                        $("#requestRoomresult").html(resp);
+                    })
+                }
+            })
+
+            // /////////////////////////////////////////////////////////////////    ROOM NO REQUIREMENT EMAIL
+            $("#RoomEmail").val(activeUser).prop("readonly","true");
+
+            // /////////////////////////////////////////////////////////////////    FEE STATUS MODAL REQUIREMENTS EMAIL
+            $("#feeEmail").val(activeUser).prop("readonly","true");
+
+            // /////////////////////////////////////////////////////////////////    EMAIL IN PASSWORD CHANGE
+            $("#securityemail").val(activeUser).prop("readonly","true");
+
+            // /////////////////////////////////////////////////////////////////    BUTTON CHANGE PASSWORD
+            $("#btnChangePwd").click(function(){
+                var email = $("#securityemail").val();
+                var oldPwd = $("#oldPassword").val();
+                var newPwd = $("#newPassword").val();
+
+                var url = "/confirmPwd?email="+email+"&oldPwd="+oldPwd;
+
+                $.getJSON(url, function(JSONresp)
+                {
+                    if(JSONresp.length==0)
+                    {
+                        $("#changeResult").html("<p class='text-danger'>INVALID USER</p>");
+                    }
+                    else
+                    {
+                        var url = "/updatePassword?email="+email+"&oldPwd="+oldPwd+"&newPwd="+newPwd;
+
+                        $.getJSON(url, function(JSONresp){
+
+                            if(JSONresp.length==0)
+                            {
+                                $("#changeResult").html("<p class='text-danger'>Not updated</p>");
+                            }
+                            else
+                            {
+                                $("#securityemail").css("border","green 1px solid");
+                                $("#oldPassword").css("border","green 1px solid");
+                                $("#newPassword").css("border","green 1px solid");               
+                                $("#changeResult").html("<p class='text-success'> UPDATED SUCCESSFULLY </p> ");
+                            }
+                        })
+                    }
+                })
+            })
+
+            // /////////////////////////////////////////////////////////////////    VIEW PASSWORD OLD
+            $(".fa1").mousedown(function(){
+                $("#oldPassword").prop("type", "text");
+                $(".fa1").removeClass("fa-eye-slash").addClass("fa-eye");
+            });
+
+            $(".fa1").mouseup(function(){
+                $("#oldPassword").prop("type", "password");
+                $(".fa1").removeClass("fa-eye").addClass("fa-eye-slash");
+            });
+
+            // /////////////////////////////////////////////////////////////////    VIEW PASSWORD NEW
+            $(".fa2").mousedown(function(){
+                $("#newPassword").prop("type", "text");
+                $(".fa2").removeClass("fa-eye-slash").addClass("fa-eye");
+            });
+
+            $(".fa2").mouseup(function(){
+                $("#newPassword").prop("type", "password");
+                $(".fa2").removeClass("fa-eye").addClass("fa-eye-slash");
+            });
+       
+            // /////////////////////////////////////////////////////////////////    LOG OUT BUTTON
+            $("#btnLogout").click(function(){
+                localStorage.removeItem("activeUser");
+                window.location.replace("../index.html");
+            });
+
+            // /////////////////////////////////////////////////////////////////    GET FOOTER SECTION
+            $(".footer").load("../common/footer.html");
+        })
+
+    </script>
+
+</head>
+<body ng-app="pendingModule" ng-controller="pendingController" ng-init="showAllRoom();">
+    
+    <!-- ///////////////////////////                NAVBAR -->
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+    
+            <!-- LOGO -->
+            <a class="navbar-brand row">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <span>
+                        <img src="../pics/mrsptulogo.png" alt="Bootstrap" class="uniimg" width="50" height="50" style="margin-left: 1vw;">
+                    </span>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan1">
+                                MAHARAJA RANJIT SINGH PUNJAB TECHNICAL UNIVERSITY, BATHINDA 
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan">
+                                STUDENT DASHBOARD
+                            </span>
+                        </div>
+                    </div>
+                </div> 
+            </a>
+
+            <!-- BUTTONS IN NVABR -->
+            <form class="d-flex"> 
+                <a href="#" id="btnLogout" class="btn btn-outline-success" style="margin: 1vw;">
+                    LOGOUT
+                </a>
+            </form>
+            
+        </div>
+    </nav>
+
+    <!-- ///////////////////////////                CONTENTS SECTION -->
+    <div class="sectionBackground">
+
+        <div class="container-fluid bg-body-tertiary rounded shadow heading">
+            <span class="headingSpan">
+                WELCOME: <span class="headingSpan" id="welcomeuser"></span>
+            </span>
+        </div>
+
+        <!-- ///////////////////////////                SERVICE SECTION -->
+        <div class="row" style="padding: 2vw;">
+
+            <!-- ///////////////////////////                DESIGN 1 -->
+            <div class="col">
+
+                <div class="row">
+
+                    <!-- ///////////////////////////                COMPLETE PROFILE -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                              <a href="profile.html" id="profileBtn" class="btn btn-success">COMPLETE YOUR PROFILE AND LOCK</a>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- ///////////////////////////                ROOM ALLOTMENT -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-success" id="roomRequest" data-bs-toggle="modal" data-bs-target="#roomRequestModal">
+                                    REQUEST FOR ROOM ALLOTMENT
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- ///////////////////////////                ROOMMATES -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-success" id="roomNo" data-bs-toggle="modal" data-bs-target="#roomMatesModal">
+                                    ROOM NO
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- ///////////////////////////                FEE PAYMENT STATUS -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-success" id="feeStatus" data-bs-toggle="modal" data-bs-target="#feeStatusModal">
+                                    CHECK FEE PAYMENT STATUS
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ///////////////////////////                RETURN -->
+                    <!-- <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                              <a href="search.html" class="btn btn-success">REQUEST RETURN OF SECURITY</a>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- ///////////////////////////                UPDATE INFO -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-success" id="messBill" data-bs-toggle="modal" data-bs-target="#messModal">
+                                    UPDATE YOUR INFOMATION
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- ///////////////////////////                CHANGE PASSWORD -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-success" id="feeStatus" data-bs-toggle="modal" data-bs-target="#securityModal">
+                                    CHANGE PASSWORD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+  
+    </div>
+
+    <!-- ///////////////////////////                FOOTER SECTION -->
+    <div class="footer">
+
+    </div>
+
+    <!-- ///////// ROOM REQUEST MODAL MODAL -->
+    <div class="modal fade" id="roomRequestModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">REQUEST ROOM ALLOTMENT</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form>
+                        <div class="mb-3 form-floating">
+                          <input type="email" class="form-control" id="requestRoomEmail" placeholder="email" autocomplete="false" required> 
+                          <label for="requestRoomEmail">Email address</label>
+                        </div>  
+                        
+                        <div class="mb-3 form-floating">
+                            <input type="text" class="form-control" id="requestRoomYear" placeholder="year" autocomplete="false" required> 
+                            <label for="requestRoomYear">Room for Academic year</label>
+                        </div> 
+
+                        <div class="mb-3 form-floating">
+                            <input type="number" class="form-control" id="requestRoomCGPA" placeholder="year" autocomplete="false" required> 
+                            <label for="requestRoomCGPA">CGPA of previous year</label>
+                        </div>
+
+                        <div class="mb-3">
+                           <center><input type="button" value="REQUEST" class="btn btn-success" id="btnRoomRequest"></center>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="modal-footer">
+                    <div id="requestRoomresult"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ///////// ROOM NO MODAL MODAL -->
+    <div class="modal fade" id="roomMatesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">ROOM NUMBER <span id="hostel"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form>
+                        <div class="mb-3 form-floating">
+                          <input type="email" class="form-control" id="RoomEmail" placeholder="email" autocomplete="false"> 
+                          <label for="RoomEmail">Email address</label>
+                        </div>  
+
+                        <div class="mb-3 form-floating">
+                            <input type="text" class="form-control" id="hostelInput" placeholder="room" autocomplete="false"> 
+                            <label for="hostelInput">Hostel</label>
+                        </div>
+
+                        <div class="mb-3 form-floating">
+                            <input type="text" class="form-control" id="room" placeholder="room" autocomplete="false"> 
+                            <label for="room">Room </label>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ///////// FEE STATUS MODAL -->
+    <div class="modal fade" id="feeStatusModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">FEE STATUS</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form>
+                        <div class="mb-3 form-floating">
+                          <input type="email" class="form-control" id="feeEmail" placeholder="email" autocomplete="false"> 
+                          <label for="feeEmail">Email address</label>
+                        </div>  
+
+                        <div class="mb-3 form-floating">
+                            <input type="text" class="form-control" id="fee" placeholder="room" autocomplete="false"> 
+                            <label for="fee">Fee Status of 1st Half</label>
+                        </div>
+
+                        <div class="mb-3 form-floating">
+                            <input type="text" class="form-control" id="fee2" placeholder="room" autocomplete="false"> 
+                            <label for="fee2">Fee Status of 2nd Half</label>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ////////  SECURITY ///////////////////////// class="fade"-->
+    <div class="modal " id="securityModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">CHANGE PASSWORD</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form>
+                        <div class="mb-3 form-floating">
+                          <input type="email" class="form-control" id="securityemail" value="@gmail.com" required placeholder="email">
+                          <label for="securityemail" class="form-label">&nbsp;Email address</label>                      
+                          <span id="securityemailmsj"></span>
+                        </div>
+                    
+                        <div class="row">
+                            <div class="mb-3 col-md-11 form-floating">
+                              <input type="password" class="form-control" id="oldPassword" value="" required placeholder="old">
+                              <label for="oldPassword" class="form-label">&nbsp;Old Password</label>
+                              <span id="oldPasswordmsj"></span>
+                            </div>
+
+                            <div class="col-md-1" style="margin-top: 3%;">
+                                <i class="fa fa-eye-slash fa1" aria-hidden="true"></i> 
+                            </div>
+                        
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3 col-md-11 form-floating">
+                                <input type="password" class="form-control" id="newPassword" required value="" placeholder="new">
+                                <label for="newPassword" class="form-label">&nbsp;New Password</label>
+                                <span id="newPasswordmsj"></span>
+                            </div> 
+                        
+                            <div class="col-md-1" style="margin-top: 3%;">
+                                <i class="fa fa-eye-slash fa2" aria-hidden="true"></i> 
+                            </div>
+                        
+                        </div>
+
+                        <center>
+                        <div class="mb-3">
+                            <input type="button" value="CHANGE" class="btn btn-success" id="btnChangePwd">
+                        </div>
+
+                        </center>
+                    </form>
+
+                </div>
+
+                <div class="modal-footer" style="align-items: center;">
+                    <div id="changeResult"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>  
+
+</body>
+</html>

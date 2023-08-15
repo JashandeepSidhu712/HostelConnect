@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOSTEL MRSPTU-GZSCCET</title>
+
+    <!-- INDEX.CSS SHEET -->
+
+    <link rel="stylesheet" href="../css/index.css">
+
+    <!-- Bootstrap links 2 -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"> 
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+    <!-- JQUERY LINK -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- JAVASCRIPT -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <!-- WAYPOINT -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js" integrity="sha512-CEiA+78TpP9KAIPzqBvxUv8hy41jyI3f2uHi7DGp/Y/Ka973qgSdybNegWFciqh6GrN2UePx2KkflnQUbUhNIA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- ANIMATE.CSS -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"/>
+
+    <!-- FONT AWESOME -->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+        .AboutUsRow
+        {
+            margin-top: 2vw;
+        }
+
+    </style>
+
+    <script>
+        $(document).ready(function(){
+
+            $(".footer").load("../common/footer.html");
+        })
+    </script>
+
+</head>
+<body>
+    
+    <!-- NAVBAR -->
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+    
+            <!-- LOGO -->
+            <a class="navbar-brand row">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <span>
+                        <img src="../pics/mrsptulogo.png" alt="Bootstrap" class="uniimg" width="50" height="50" style="margin-left: 1vw;">
+                    </span>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan1">
+                                MAHARAJA RANJIT SINGH PUNJAB TECHNICAL UNIVERSITY, BATHINDA 
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan">
+                                HOSTEL MANAGEMENT SYSTEM
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- BUTTONS IN NVABR -->
+            <form class="d-flex">
+                <!-- TOGGLER BUTTON -->
+                <button class="navbar-toggler tb" type="button" style="margin: 1vw;" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </form>
+    
+                <!-- OFFCANVAS CONTENT -->
+            <div class="offcanvas offcanvas-end bg-body-tertiary" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Hostel Management</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="list-group list-group-flush">
+
+                        <a href="../index.html" class="list-group-item list-group-item-action">Home         </a>
+                        <a href="" class="list-group-item list-group-item-action bg-body-tertiary">About Us         </a>
+                        <a href="../frontendPages/administration.html" class="list-group-item list-group-item-action">Administration         </a>
+                        <a href="../frontendPages/feeDetails.html" class="list-group-item list-group-item-action">Fee Details         </a>
+                        <a href="../frontendPages/gallery.html" class="list-group-item list-group-item-action">Gallery       </a>
+                        <a href="../frontendPages/antiRagging.html" class="list-group-item list-group-item-action">Anti-Ragging Act        </a>
+                        <a href="index.html" class="list-group-item list-group-item-action">Contact Us        </a>
+   
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <!--   ABOUT US  ///////////// -->
+    <div class="sectionBackground" style="height: auto;">
+
+        <div class="container-fluid bg-body-tertiary rounded shadow heading">
+            <span class="headingSpan">
+                MRSPTU-GZSCCET HOSTELS
+            </span>
+        </div>
+
+        <div class="row">
+            <div class="col AboutUsRow">
+                <span class="AboutUsSpan2"> 
+
+                    All Hostels are our legacy and they remind of us the glory this institute / 
+                    University has had. These make the campus an unforgettable experience. 
+                    Each hostel has a state of art cooperative mess, managed by students. 
+                    All hostels provide accommodation where students of all years and branches 
+                    of study reside together in perfect harmony in a year-wise hostel system 
+                    as well as a mixed hostel system. <br><br>
+
+                    The accommodation offered includes cubical, two-seated, three-seated rooms 
+                    and all hostels are well-equipped with facilities like medical, laundry, 
+                    geysers, water coolers with RO system, well furnished common room with 
+                    facilities like L.E.D. TV, leading newspapers and indoor games like Carom, 
+                    Chess for the residents. All hostels have lush green lawns and are managed 
+                    by hostel staff including hostel manager, care taker and mess in-charge 
+                    available from 09.00 a.m. to 05.00 p.m. on week days as well as warden and 
+                    assistant warden who are available 24x7 hours. Good hygienic practices are 
+                    exercised to make the stay of residents comfortable and to make them to feel 
+                    at home at all times. <br><br>
+
+                    Various recreational, cultural and religious events are organized on the 
+                    request of residents for the overall development of students. <br><br>
+
+                    <div class="d-flex justify-content-evenly">
+                        <img class="img" src="../pics/bg3P.jpg" alt="">
+                    </div>
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ///////////////////////////                FOOTER SECTION -->
+    <div class="footer">
+
+    </div>
+
+</body>
+</html>

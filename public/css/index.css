@@ -1,0 +1,329 @@
+*
+{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    user-select: none;
+    scroll-behavior: smooth;
+    color: #660000;
+}
+#logo
+{
+    border-radius: 50px;
+}
+#unispan
+{
+    font-size: 2vw;
+    text-align: center;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: #660000;
+}
+#unispan1
+{
+    font-size: 1.5vw;
+    text-align: center;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: #660000;
+}
+/*////////////////////////////////////////////                    HEADINGS                  ////*/
+.heading
+{
+    text-align: center;
+    padding: 1vw;
+}
+.headingSpan
+{
+    font-size: 2vw;
+    font-weight: 900;
+    font-family: 'Times New Roman', Times, serif;
+}
+.toggleButton
+{
+    margin: 1vw; 
+    border-color: #660000 !important; 
+    color: #660000 !important;
+}
+/*////////////////////////////////////////////                     BUTTONS - btn-success + btn-outline-success                ////*/
+.btn-success 
+{
+    background-color: #660000 !important;
+    border-color: #660000 !important;
+    color: white;
+}
+.btn-success:hover, .btn-outline-success:hover
+{
+    color: white !important;
+    background-color: #840101 !important;
+    border-color: #840101 !important;
+}
+.btn-success:focus, .btn-outline-success:focus
+{
+    background-color: #840101 !important;
+    box-shadow: inset 0 3px 5px #840101 !important;
+    color: white !important;
+}
+.btn-success:active, .btn-outline-success:active
+{
+    background-color: #840101 !important;
+    border-color: #840101 !important;
+    box-shadow: inset 0 3px 5px #840101 !important;
+    color: white !important;
+}
+.btn-outline-success 
+{
+    border-color: #660000 !important;
+    color: #660000 !important;
+}
+/*////////////////////////////////////////////                     ANIMATIONS + WAYPOINT                  ////*/
+/* .AboutUsRow
+{
+    opacity: 0;
+}
+.AboutUsRow.animated
+{
+    opacity: 1;
+    animation-duration:1s;
+    animation-delay: 0.15s;
+} */
+/*////////////////////////////////////////////                     MAIN SECTION                  ////*/
+.section1
+{
+    background: url(../pics/bg3L.jpg);
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.section11
+{
+    display: none;
+}
+/*////////////////////////////////////////////                     BACKGROUND SECTIONS                ////*/
+.sectionBackground
+{
+    padding: 7vw;
+    background: url(../pics/bg3.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Times New Roman', Times, serif;
+}
+.sectionBackgroundExtended
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/*////////////////////////////////////////////                     ABOUT US SECTION                  ////*/
+.AboutUsRow
+{
+    background-color: rgb(255, 255, 255); 
+    color: rgb(0, 0, 0);
+    padding: 2vw; 
+    margin: 2vw;
+    display: flex;
+    justify-content: center;
+    border-radius: 20px;
+    text-align: center;
+    font-weight: 900;
+    text-align: justify;
+}
+.AboutUsSpan1
+{
+    font-size: 25px; 
+    font-family: 'Times New Roman', Times, serif;
+}
+.AboutUsSpan2
+{
+    font-size: 15px;
+    font-weight: 900;
+    font-family: 'Times New Roman', Times, serif;
+}
+/*////////////////////////////////////////////                     STUDENT REGISTRATION SECTION                  ////*/
+.stuRegcol
+{
+    margin: 2vw;
+    padding: 2vw;
+    font-family: 'Times New Roman', Times, serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.stuRegSpan
+{
+    font-size: 1vw;
+    margin: 3vw;
+    padding: 2vw;
+    border-radius: 10px;
+}
+/*////////////////////////////////////////////                     ADMINISTRATION SECTION                  ////*/
+.administrationImg
+{
+    width: 50vw;
+    margin: 1vw;
+    border-radius: 20px;
+}
+/*////////////////////////////////////////////                     GALLERY SECTION                  ////*/
+.galleryDesign
+{
+    background-color: rgba(255, 255, 255, 0.728);
+    padding: 2vw;
+    margin: 4vw;
+}
+.galimgs
+{
+    width: 25%;
+    margin: 2vw;
+}
+/*////////////////////////////////////////////                     FOOTER SECTION                  ////*/
+.section6
+{
+    background-color: white;
+    color: black;
+    height: 30vh;
+}
+/*////////////////////////////////////////////                     IMAGES IN ABOUTUS.HTML + ADMINISTRATION.HTML                 ////*/
+.img
+{
+    width: 10vw;
+    height: 10vw;
+    margin: 1vw;
+    border-radius: 20px;
+}
+.wardenDesign
+{
+    background-color: rgb(255, 255, 255);
+    border: 1px solid black;
+}
+/*////////////////////////////////////////////                     DASHBOARD CARD DESIGNS                 ////*/
+.dashboard
+{
+    padding: 2vw; 
+    display: flex; 
+    justify-content: center; 
+    padding-bottom: 0;
+}
+.dashboardCard
+{
+    width: 18rem;
+    height: 20rem;
+}
+.tab
+{
+    margin-top: 3vw !important;
+}
+
+/*////////////////////////////////////////////                     RESPONSIVE SECTION                  ////*/
+@media(max-width: 1250px) 
+{
+    .SignupLogin
+    {
+        display: none;
+    }
+    .section1
+    {
+        padding: 5vw;
+        background: url(../pics/bg3L.jpg);
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .section11
+    {
+        display: none;
+    }
+}
+@media(max-width: 980px) 
+{
+    .SignupLogin
+    {
+        display: none;
+    }
+    .uniimg
+    {
+        width: 40px;
+        height: 40px;
+        margin: 0vw;
+    }
+    #unispan1
+    {
+        font-size: 1.5vw;
+    }
+    #unispan
+    {
+        font-size: 2.5vw;
+        font-weight: bold;
+    }
+    .toggleButton
+    {
+        margin: 0;
+    }
+    /*////////////////////////////////////////////                     HEADINGS                  ////*/
+    .headingSpan
+    {
+        font-size: 5vw;
+    }
+    /*////////////////////////////////////////////                     MAIN SECTION                  ////*/
+    .section1
+    {
+        display: none;
+    }
+    .section11
+    {
+        padding: 5vw;
+        background: url(../pics/bg3P.jpg);
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    /*////////////////////////////////////////////                     ABOUT US SECTION                  ////*/
+    .AboutUsRow
+    {
+        padding: 2vw; 
+        margin: 2vw;
+    }
+    .AboutUsSpan1
+    {
+        font-size: 20px;
+    }
+    .AboutUsSpan2
+    {
+        font-size: 10px;
+    }
+    /*////////////////////////////////////////////                     STUDENT REGISTRATION SECTION                  ////*/
+    .stuRegSpan
+    {
+        font-size: 2.5vw;
+    }
+    /*////////////////////////////////////////////                     ADMINISTRATION SECTION                  ////*/
+    .administrationImg
+    {
+        margin: 5vw;
+        width: 70vw;
+    }
+    /*////////////////////////////////////////////                     GALLERY SECTION                  ////*/
+    .galimgs
+    {
+        width: 40%;
+        margin: 3vw;
+    }
+    /*////////////////////////////////////////////                     IMAGES IN ABOUTUS.HTML + ADMINISTRATION.HTML                 ////*/
+    .img
+    {
+        width: 30vw;
+        height: 30vw;
+    }
+    .dashboardCol2
+    {
+        display: contents;
+    }
+    .dashboardCol1
+    {
+        display: none;
+    }
+    .dashboardCard
+    {
+        width: 12rem;
+    }
+}

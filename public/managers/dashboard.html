@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MANAGER DASHBOARD</title>
+
+    <!-- INDEX.CSS SHEET -->
+
+    <link rel="stylesheet" href="../css/index.css">
+
+    <!-- Bootstrap links 2 -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"> 
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+    <!-- JQUERY LINK -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- JAVASCRIPT -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <!-- ANGULAR JS -->
+
+    <script src="../angular/angular.min.js"></script>
+
+    <!-- WAYPOINT -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js" dashboardCard +78TpP9KAIPzqBvxUv8hy41jyI3f2uHi7DGp/Y/Ka973qgSdybNegWFciqh6GrN2UePx2KkflnQUbUhNIA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- ANIMATE.CSS -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"/>
+
+    <!-- FONT AWESOME -->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script>
+
+        $(document).ready(function(){
+
+            // /////////////////////////////////////////////////////////////////    GET ACTIVE USER
+            var activeUser = localStorage.getItem("activeUser");
+
+            if(activeUser == null)
+            window.location.replace("../index.html");
+
+            // /////////////////////////////////////////////////////////////////    LOG OUT BUTTON
+            $("#btnLogout").click(function(){
+                localStorage.removeItem("activeUser");
+                window.location.replace("../index.html");
+            });
+
+            // /////////////////////////////////////////////////////////////////    AUTOFILL EMAIL IN HEADING
+            $("#welcomeuser").html(activeUser);
+
+            // /////////////////////////////////////////////////////////////////    ACCEPTIOG HOSTEL REQUEST BUTTON 
+            $("#pendingRequestBtn").click(function(){
+
+                var url = "/managerPending?email="+activeUser;
+
+                $.getJSON(url, function(JSONresp){
+
+                    if( JSONresp.length==0 )
+                    {
+                        alert("WRONG DETAILS");
+                    }
+                    else
+                    {
+                        window.location.href="requestHostel.html";
+                    }
+                })
+            })
+
+            // /////////////////////////////////////////////////////////////////    AUTOFILL EMAIL IN SECURITY MODEL
+            $("#securityemail").val(activeUser).prop("readonly","true");
+
+            // /////////////////////////////////////////////////////////////////    CHANGE PASSWORD BUTTON
+            $("#btnChangePwd").click(function(){
+                var email = $("#securityemail").val();
+                var oldPwd = $("#oldPassword").val();
+                var newPwd = $("#newPassword").val();
+
+                var url = "/confirmPwdManagers?email="+email+"&oldPwd="+oldPwd;
+
+                $.getJSON(url, function(JSONresp)
+                {
+                    if(JSONresp.length==0)
+                    {
+                        $("#changeResult").html("<p class='text-danger'>INVALID USER</p>");
+                    }
+                    else
+                    {
+                        var url = "/updatePasswordManagers?email="+email+"&oldPwd="+oldPwd+"&newPwd="+newPwd;
+
+                        $.getJSON(url, function(JSONresp){
+
+                            if(JSONresp.length==0)
+                            {
+                                $("#changeResult").html("<p class='text-danger'>Not updated</p>");
+                            }
+                            else
+                            {
+                                $("#securityemail").css("border","green 1px solid");
+                                $("#oldPassword").css("border","green 1px solid");
+                                $("#newPassword").css("border","green 1px solid");               
+                                $("#changeResult").html("<p class='text-success'> UPDATED SUCCESSFULLY </p> ");
+                            }
+                        })
+                    }
+                })
+            })
+
+            // /////////////////////////////////////////////////////////////////    VIEW PASSWORD OLD
+            $(".fa1").mousedown(function(){
+                $("#oldPassword").prop("type", "text");
+                $(".fa1").removeClass("fa-eye-slash").addClass("fa-eye");
+            });
+
+            $(".fa1").mouseup(function(){
+                $("#oldPassword").prop("type", "password");
+                $(".fa1").removeClass("fa-eye").addClass("fa-eye-slash");
+            });
+
+            // /////////////////////////////////////////////////////////////////    VIEW PASSWORD NEW
+            $(".fa2").mousedown(function(){
+                $("#newPassword").prop("type", "text");
+                $(".fa2").removeClass("fa-eye-slash").addClass("fa-eye");
+            });
+
+            $(".fa2").mouseup(function(){
+                $("#newPassword").prop("type", "password");
+                $(".fa2").removeClass("fa-eye").addClass("fa-eye-slash");
+            });
+       
+            // /////////////////////////////////////////////////////////////////    GET FOOTER SECTION
+            $(".footer").load("../common/footer.html");
+
+        })
+
+    </script>
+
+</head>
+<body>
+    
+    <!-- ///////////////////////////                NAVBAR -->
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+    
+            <!-- LOGO -->
+            <a class="navbar-brand row">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <span>
+                        <img src="../pics/mrsptulogo.png" alt="Bootstrap" class="uniimg" width="50" height="50" style="margin-left: 1vw;">
+                    </span>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan1">
+                                MAHARAJA RANJIT SINGH PUNJAB TECHNICAL UNIVERSITY, BATHINDA 
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span id="unispan">
+                                MANAGER DASHBOARD
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- BUTTONS IN NVABR -->
+            <form class="d-flex"> 
+                <a href="#" id="btnLogout" class="btn btn-outline-success" style="margin: 1vw;">
+                    LOGOUT
+                </a>
+            </form>
+
+        </div>
+    </nav>
+
+    <!-- ///////////////////////////                CONTENT MAIN PAGE-->
+    <div class="sectionBackground">
+
+        <!-- ///////////////////////////                HEADING -->
+        <div class="container-fluid bg-body-tertiary rounded shadow heading">
+            <span class="headingSpan">
+                WELCOME: <span class="headingSpan" id="welcomeuser"></span>
+            </span>
+        </div>
+
+        <!-- ///////////////////////////                CARDS -->
+        <div class="row" style="padding: 2vw;">
+
+            <div class="col">
+
+                <div class="row">
+
+                    <!-- ///////////////////////////                PENDING REQUESTS -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                            <a href="#" id="pendingRequestBtn" class="btn btn-success">PENDING REQUESTS</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ///////////////////////////                ROOM ALLOT  -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                            <a href="roomAllot.html" class="btn btn-success">ROOM ALLOT PROCESS</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ///////////////////////////                RETURN SECURITY STATUS -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                            <a href="messAccount.html" class="btn btn-success">ALLOT MESS ACCOUNT</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ///////////////////////////                FEE PAID STATUS -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                            <a href="feeStatus.html" class="btn btn-success">FEE PAID STATUS</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ///////////////////////////                FEE PAID STATUS -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                            <a href="messBillStatus.html" class="btn btn-success">MESS BILL STATUS</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ///////////////////////////                RETURN SECURITY STATUS -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                            <a href="returnSecurity.html" class="btn btn-success">RETURN SECURITY STATUS</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ///////////////////////////                SEARCH -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                            <a href="search.html" class="btn btn-success">SEARCH</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ///////////////////////////                CHANGE PASSWORD -->
+                    <div class="col dashboard">
+                        <div class="card dashboardCard">
+                            <img src="../pics/bg3P.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-success" id="feeStatus" data-bs-toggle="modal" data-bs-target="#securityModal">
+                                    CHANGE PASSWORD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ///////////////////////////                FOOTER SECTION -->
+    <div class="footer">
+
+    </div>
+
+    <!-- ///////////////////////////                SECURITY-CHANGE PASSWORD MODEL -->
+    <div class="modal " id="securityModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">CHANGE PASSWORD</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <form>
+                        <div class="mb-3 form-floating">
+                          <input type="email" class="form-control" id="securityemail" value="@gmail.com" required placeholder="email">
+                          <label for="securityemail" class="form-label">&nbsp;Email address</label>                      
+                          <span id="securityemailmsj"></span>
+                        </div>
+                    
+                        <div class="row">
+                            <div class="mb-3 col-md-11 form-floating">
+                              <input type="password" class="form-control" id="oldPassword" value="" required placeholder="old">
+                              <label for="oldPassword" class="form-label">&nbsp;Old Password</label>
+                              <span id="oldPasswordmsj"></span>
+                            </div>
+
+                            <div class="col-md-1" style="margin-top: 3%;">
+                                <i class="fa fa-eye-slash fa1" aria-hidden="true"></i> 
+                            </div>
+                        
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3 col-md-11 form-floating">
+                                <input type="password" class="form-control" id="newPassword" required value="" placeholder="new">
+                                <label for="newPassword" class="form-label">&nbsp;New Password</label>
+                                <span id="newPasswordmsj"></span>
+                            </div> 
+                        
+                            <div class="col-md-1" style="margin-top: 3%;">
+                                <i class="fa fa-eye-slash fa2" aria-hidden="true"></i> 
+                            </div>
+                        
+                        </div>
+
+                        <center>
+                        <div class="mb-3">
+                            <input type="button" value="CHANGE" class="btn btn-success" id="btnChangePwd">
+                        </div>
+
+                        </center>
+                    </form>
+
+                </div>
+
+                <div class="modal-footer" style="align-items: center;">
+                    <div id="changeResult"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
