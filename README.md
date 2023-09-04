@@ -94,3 +94,9 @@ Here, you attempt to connect to the MySQL database using the connection object y
 The connect method takes a callback function as its argument, which will be called when the connection attempt is made. 
 
 Inside the callback, you check for any errors during the connection process. If there are errors, they will be logged to the console. If there are no errors, the message "Server Connected" will be logged to the console, indicating that the connection to the database was successful.
+
+## 14. Run XAMPP
+
+## APPROACH
+
+
